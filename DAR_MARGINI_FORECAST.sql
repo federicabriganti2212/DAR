@@ -94,6 +94,7 @@ WITH
               M.PDP IS NOT NULL
               AND M.PDP NOT IN ('00000000000000', '***', 'ND')
               AND M.PDP NOT LIKE 'DSB%'
+              AND M.PDP NOT LIKE 'SA-%'
               THEN 'HA IL PUNTO'
             ELSE 'NON HA IL PUNTO'
             END AS CHECK
