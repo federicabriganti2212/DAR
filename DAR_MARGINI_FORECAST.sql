@@ -823,6 +823,16 @@ SET
 # 10. Cancello tabelle superflue create durante il processo
 drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_DA_CANC`;
 drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_ARRICCHISCI_BUCHI`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_BUCHI_CODE`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_CALENDARIO_PROIEZIONI`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_CHIAVE_CLIENTE_MESE_BUCHI`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_MIN_DATA_DELIVERY_CODE`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_PDP_MESE`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_PIVA_CFISC_MESE`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_PIVA_CFISC_TIPO`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_PROIEZIONI_MESE_BUCHI`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_PROIEZIONI_PDP`;
+drop table `a2a-labrrclab-prd.L1.DAR_MARGINI_FORECAST_PROIEZIONI_PIVA`;
 
 
 # Accodo la tabella di output nella corrispondente tabella nell'L1 con una specifica DATA_LANCIO
