@@ -56,8 +56,9 @@ select DISTINCT
 
   , COALESCE(
     case 
-        when lsp.id is null then gtl.cod_listino_margini 
+        when lsp.id is null and lsc.id is null then gtl.cod_listino_margini 
         when lsp.id is not null and (lsp.baseload is not null or lsp.f1 is not null or lsp.peak is not null or lsp.p_gas is not null) THEN 'SPE'
+        when lsc.id is not null and (lsc.f1 is not null or lsc.f2 is not null or lsc.f3 is not null or costo_ppa is not null) THEN CONCAT('COMP_', lsc.tipo_listino)
     end, 'STD') AS FLG_LISTINO_MP_STD_GC10_SPE
 
   , OFF.SISTEMA
@@ -97,6 +98,8 @@ inner join `a2a-labrrclab-prd.L0.DAR_MARGINI_GECOOFFERTEDETTAGLIO` off_dett
 inner join `a2a-dataplatform-prd.DP_LAB.GECO_TARIFFE` tariffe on off.COD_TARIFFA = tariffe.ID_TARIFFA
 LEFT JOIN `a2a-labrrclab-prd.L0.DAR_MARGINI_LISTINI_SPECIALI` lsp
   ON off.ID_OFFERTA = lsp.ID_OFFERTA AND DATE(off_dett.DATA_VOLUME) = DATE(lsp.DATA_VOLUME)
+LEFT JOIN `a2a-labrrclab-prd.L0.DAR_MARGINI_LISTINI_COMPLESSI` lsc
+  ON off.ID_OFFERTA = lsc.ID_OFFERTA AND DATE(off_dett.DATA_VOLUME) = DATE(lsc.DATA_VOLUME)
 left join `a2a-dataplatform-prd.DP_LAB.GECO_TIPO_LISTINO` gtl
   on cast(off.cod_listino as string)=cast(gtl.ID_TIPO_LISTINO as string)
 LEFT JOIN `a2a-labrrclab-prd.L0.DAR_MARGINI_Trova_tensione_prevalente` TP 
@@ -130,7 +133,10 @@ LEFT JOIN `a2a-labrrclab-prd.L0.DAR_MARGINI_TRANSCODIFICA_TIPO_CONTRATTO` TC2
   ON TC.DESC_TIPO_CONTRATTO = TC2.string_field_0
 where 
   (off.COD_STATO in (5) OR (off.COD_STATO in (8) AND lsp.ID is not null))
-  AND off_dett.DATA_VOLUME>='2024-01-01' ),
+  AND off_dett.DATA_VOLUME>='2024-01-01' 
+  AND OFF.COD_OFFERTA LIKE '%_PPA%' #AND OFF.COD_OFFERTA NOT LIKE 'S-%' #DA CANC
+  )
+  ,
 
 
 
