@@ -77,14 +77,15 @@ select DISTINCT
           end AS OFFERTA_MADRE
           
   , case when
-            off.cod_offerta like 'S-%' AND TC.DESC_TIPO_CONTRATTO not like '%TTFSA%' then off.COD_CONTRATTO_STORNATO
+            off.cod_offerta like 'S-%' AND TC.DESC_TIPO_CONTRATTO not like '%TTFSA%' AND OFF.COD_OFFERTA NOT LIKE '%PPA%' then off.COD_CONTRATTO_STORNATO
            when 
-            off.cod_offerta like 'S-%' AND TC.DESC_TIPO_CONTRATTO LIKE '%TTFSA%' THEN SPLIT(off.COD_CONTRATTO_STORNATO, 'F')[SAFE_OFFSET(0)]
+            off.cod_offerta like 'S-%' AND (TC.DESC_TIPO_CONTRATTO LIKE '%TTFSA%' OR off.cod_offerta like '%PPA%') THEN SPLIT(off.COD_CONTRATTO_STORNATO, 'F')[SAFE_OFFSET(0)]
            when
-            off.cod_offerta like '%F%' AND TC.DESC_TIPO_CONTRATTO NOT LIKE '%TTFSA%' THEN off.CONTRATTO_OLD
+            off.cod_offerta like '%F%' AND TC.DESC_TIPO_CONTRATTO NOT LIKE '%TTFSA%' AND OFF.COD_OFFERTA NOT LIKE '%PPA%' THEN off.CONTRATTO_OLD
            WHEN
-            off.COD_OFFERTA LIKE '%F%' AND TC.DESC_TIPO_CONTRATTO LIKE '%TTFSA%' THEN SPLIT(off.CONTRATTO_OLD, 'F')[SAFE_OFFSET(0)]
+            (off.COD_OFFERTA LIKE '%F%' AND TC.DESC_TIPO_CONTRATTO LIKE '%TTFSA%') OR (off.cod_offerta like '%PPA%' AND OFF.COD_OFFERTA NOT LIKE 'S-%') THEN SPLIT(off.CONTRATTO_OLD, 'F')[SAFE_OFFSET(0)]
            ELSE NULL END AS OFFERTA_STORNO_FIXING
+
   , off.DES_BONUS_LIBERO AS NOTE
   , '' AS PIVA_OFFERTABILE
   , '' AS CF_OFFERTABILE
@@ -129,7 +130,7 @@ LEFT JOIN `a2a-labrrclab-prd.L0.DAR_MARGINI_TRANSCODIFICA_TIPO_CONTRATTO` TC2
   ON TC.DESC_TIPO_CONTRATTO = TC2.string_field_0
 where 
   (off.COD_STATO in (5) OR (off.COD_STATO in (8) AND lsp.ID is not null))
-  AND off_dett.DATA_VOLUME>='2024-01-01'),
+  AND off_dett.DATA_VOLUME>='2024-01-01' ),
 
 
 
